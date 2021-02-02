@@ -1,4 +1,4 @@
-#include <WiFiConf.h>
+#include <WiFiConf.hpp>
 
 String ssid="Set Me";
 String password="";

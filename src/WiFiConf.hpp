@@ -13,7 +13,7 @@
 #ifndef ESP8266WEBSERVERSECURE_H
 #include <ESP8266WebServerSecure.h>
 #endif
-#include <HTMLPages.h>
+#include <HTMLPages.hpp>
 
 
 String *startWiFiConfiguration();
