@@ -15,5 +15,10 @@
 #endif
 #include <HTMLPages.hpp>
 
-
+/**
+ * Starts a secure web server running until SSID and password are correctly set.
+ * It is recommended to reboot your ESP after you stored returned data to apply new data.
+ *
+ * @return 2-dimension array containing {SSID, password}
+ */
 String *startWiFiConfiguration();

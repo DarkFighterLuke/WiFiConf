@@ -1,15 +1,20 @@
 #include <WiFiConf.hpp>
 
+//initial access point SSID and password
 String ssid="Set Me";
 String password="";
 
+//WiFi network configuration
 IPAddress local_ip(192,168,1,1);
 IPAddress gateway(192,168,1,1);
 IPAddress subnet(255,255,255,0);
 
-BearSSL::ESP8266WebServerSecure server(443);
 
+BearSSL::ESP8266WebServerSecure server(443);    //Secure WebServer
 
+/**
+ * Sample SSL certificate data
+ */
 static char serverCert[] PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
 MIIDSzCCAjMCCQD2ahcfZAwXxDANBgkqhkiG9w0BAQsFADCBiTELMAkGA1UEBhMC
@@ -33,6 +38,9 @@ JfUvYadSYxh3nblvA4OL+iEZiW8NE3hbW6WPXxvS7Euge0uWMPc4uEcnsE0ZVG3m
 -----END CERTIFICATE-----
 )EOF";
 
+/**
+ * Sample RSA private key data
+ */
 static char serverKey[] PROGMEM =  R"EOF(
 -----BEGIN RSA PRIVATE KEY-----
 MIIEpQIBAAKCAQEA9UoHBtn4oNKXjRgIOQ/rLxK/iI0a8Q5mDxhfuwa9//FkftSI
@@ -63,10 +71,16 @@ gz5JWYhbD6c38khSzJb0pNXCo3EuYAVa36kDM96k1BtWuhRS10Q1VXk=
 -----END RSA PRIVATE KEY-----
 )EOF";
 
+/**
+ * Called at connection to index
+ */
 void handleRoot(){
     server.send(200, "text/html", INDEX_PAGE);
 }
 
+/**
+ * Called when form data is received
+ */
 void handleSetWiFi(){
     if(server.method()==HTTP_POST){
         bool isSSIDSet, isPasswordSet=false;
@@ -90,10 +104,16 @@ void handleSetWiFi(){
     }
 }
 
+/**
+ * Called on Error 404
+ */
 void handleNotFound(){
     server.send(404);
 }
 
+/**
+ * Starts WiFi access point and sets endpoints related functions
+ */
 void setup() {
     WiFi.softAP(ssid, password);
     WiFi.softAPConfig(local_ip, gateway, subnet);
@@ -106,6 +126,12 @@ void setup() {
     server.onNotFound(handleNotFound);
 }
 
+/**
+ *
+ * @param SSLCertificate certificate to present at SSL handshake
+ * @param RSAKey RSA private key
+ * @return data bi-dimensional array containing SSID at position 1 and password at position 1
+ */
 String *startWiFiConfiguration(char *SSLCertificate, char *RSAKey){
     strcpy(serverCert, SSLCertificate);
     strcpy(serverKey, RSAKey);
